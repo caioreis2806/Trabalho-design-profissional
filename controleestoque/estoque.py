@@ -94,3 +94,79 @@ def consultar_estoque():
             f"{produto['nome']:<25} "
             f"{produto['quantidade']:<12}"
         )
+
+# ==========================================
+# PARTE 2 - DAVID
+# Entrada e saída de produtos do estoque
+# ==========================================
+
+def adicionar_estoque():
+    print("\n--- ADICIONAR ESTOQUE ---")
+
+    # Solicita o código do produto.
+    codigo = input("Código do produto: ").strip()
+
+    # Localiza o produto usando a função de busca.
+    produto = buscar_produto(codigo)
+
+    # Verifica se o produto existe.
+    if produto is None:
+        print("Produto não encontrado.")
+        return
+
+    # Solicita a quantidade que será adicionada.
+    try:
+        quantidade = int(input("Quantidade para adicionar: "))
+
+        # Aceita apenas valores maiores que zero.
+        if quantidade <= 0:
+            print("A quantidade deve ser maior que zero.")
+            return
+
+    except ValueError:
+        print("Quantidade inválida.")
+        return
+
+    # Soma a quantidade informada ao estoque atual.
+    produto["quantidade"] += quantidade
+
+    print("Estoque atualizado com sucesso!")
+    print(f"Quantidade atual: {produto['quantidade']}")
+
+
+def retirar_estoque():
+    print("\n--- RETIRAR PRODUTOS ---")
+
+    # Solicita o código do produto.
+    codigo = input("Código do produto: ").strip()
+
+    # Procura o produto na lista.
+    produto = buscar_produto(codigo)
+
+    if produto is None:
+        print("Produto não encontrado.")
+        return
+
+    # Solicita a quantidade que será retirada.
+    try:
+        quantidade = int(input("Quantidade para retirar: "))
+
+        if quantidade <= 0:
+            print("A quantidade deve ser maior que zero.")
+            return
+
+    except ValueError:
+        print("Quantidade inválida.")
+        return
+
+    # Verifica se existe quantidade suficiente.
+    if quantidade > produto["quantidade"]:
+        print("Estoque insuficiente!")
+        print(f"Disponível: {produto['quantidade']}")
+        return
+
+    # Subtrai a quantidade retirada do estoque.
+    produto["quantidade"] -= quantidade
+
+    print("Retirada realizada com sucesso!")
+    print(f"Quantidade restante: {produto['quantidade']}")
