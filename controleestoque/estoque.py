@@ -170,3 +170,103 @@ def retirar_estoque():
 
     print("Retirada realizada com sucesso!")
     print(f"Quantidade restante: {produto['quantidade']}")
+
+# ==========================================
+# PARTE 3 - JOÃO
+# Pesquisa, exclusão e menu principal
+# ==========================================
+
+def pesquisar_produto():
+    print("\n--- PESQUISAR PRODUTO ---")
+
+    # Solicita o código que será pesquisado.
+    codigo = input("Código do produto: ").strip()
+
+    # Utiliza a função de busca criada por Caio.
+    produto = buscar_produto(codigo)
+
+    # Verifica se o produto foi encontrado.
+    if produto is None:
+        print("Produto não encontrado.")
+        return
+
+    # Apresenta os dados do produto encontrado.
+    print(f"Nome: {produto['nome']}")
+    print(f"Código: {produto['codigo']}")
+    print(f"Quantidade: {produto['quantidade']}")
+
+
+def excluir_produto():
+    print("\n--- EXCLUIR PRODUTO ---")
+
+    # Solicita o código do produto a ser excluído.
+    codigo = input("Código do produto: ").strip()
+
+    produto = buscar_produto(codigo)
+
+    if produto is None:
+        print("Produto não encontrado.")
+        return
+
+    # Solicita confirmação antes da exclusão.
+    confirmacao = input("Confirma exclusão? (S/N): ").upper()
+
+    if confirmacao == "S":
+
+        # Remove o produto da lista.
+        estoque.remove(produto)
+
+        print("Produto excluído com sucesso!")
+    else:
+        print("Exclusão cancelada.")
+
+
+def menu():
+    # Mantém o sistema funcionando até o usuário sair.
+    while True:
+
+        # Apresenta as funcionalidades disponíveis.
+        print("\n========== CONTROLE DE ESTOQUE ==========")
+        print("1 - Cadastrar produto")
+        print("2 - Consultar estoque")
+        print("3 - Adicionar quantidade")
+        print("4 - Retirar quantidade")
+        print("5 - Pesquisar produto")
+        print("6 - Excluir produto")
+        print("0 - Sair")
+        print("========================================")
+
+        # Recebe a opção escolhida pelo usuário.
+        opcao = input("Escolha uma opção: ")
+
+        # Direciona o usuário para a função escolhida.
+        if opcao == "1":
+            cadastrar_produto()
+
+        elif opcao == "2":
+            consultar_estoque()
+
+        elif opcao == "3":
+            adicionar_estoque()
+
+        elif opcao == "4":
+            retirar_estoque()
+
+        elif opcao == "5":
+            pesquisar_produto()
+
+        elif opcao == "6":
+            excluir_produto()
+
+        elif opcao == "0":
+            print("Sistema encerrado!")
+
+            # Encerra o laço while.
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
+
+
+# Inicia a execução do sistema.
+menu()
