@@ -1,3 +1,4 @@
+
 # ==========================================
 # SISTEMA DE CONTROLE DE ESTOQUE
 # Integrantes: Caio, David e João
@@ -95,6 +96,7 @@ def consultar_estoque():
             f"{produto['quantidade']:<12}"
         )
 
+
 # ==========================================
 # PARTE 2 - DAVID
 # Entrada e saída de produtos do estoque
@@ -170,6 +172,7 @@ def retirar_estoque():
 
     print("Retirada realizada com sucesso!")
     print(f"Quantidade restante: {produto['quantidade']}")
+
 
 # ==========================================
 # PARTE 3 - JOÃO
