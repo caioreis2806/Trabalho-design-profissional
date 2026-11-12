@@ -1,5 +1,7 @@
 # Trabalho-design-profissional
 
+Tranca o curso..
+
 Caio — Estrutura e Gerenciamento de Produtos
 Responsável pelo desenvolvimento da estrutura de armazenamento dos produtos, utilizando listas e dicionários em Python. Implementou as funcionalidades de cadastro, busca e consulta do estoque, incluindo validações para evitar registros duplicados e entradas inválidas.
 
