@@ -1,0 +1,42 @@
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, sans-serif; background: #f2f5f9; color: #253247; }
+header { background: #17365d; color: white; padding: 25px; text-align: center; }
+
+/* 3. LAYOUT E MENU */
+header h1 { margin: 0 0 8px; }
+header p { margin: 0; color: #dbe7f5; }
+main { max-width: 1100px; margin: 30px auto; padding: 0 18px; display: flex; gap: 22px; align-items: flex-start; }
+nav { background: white; border-radius: 10px; padding: 15px; width: 245px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 3px 12px #172d4612; }
+nav button { border: none; border-radius: 6px; background: #eaf0f7; color: #17365d; padding: 12px; text-align: left; cursor: pointer; font-size: 14px; }
+nav button:hover { background: #d7e5f4; }
+
+/* 4. CONTEÚDO E FORMULÁRIOS */
+.conteudo { background: white; border-radius: 10px; padding: 28px; flex: 1; min-width: 0; box-shadow: 0 3px 12px #172d4612; }
+h2 { margin-top: 0; color: #17365d; }
+.secao { display: none; }
+.secao.ativa { display: block; }
+form { display: flex; flex-direction: column; gap: 10px; max-width: 480px; }
+label { font-weight: bold; font-size: 14px; }
+input { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; margin-bottom: 8px; }
+input:focus { outline: 2px solid #8cb7e8; border-color: #3975b8; }
+button.principal, button.perigo { border: none; padding: 13px; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
+
+/* 5. BOTÕES E MENSAGENS */
+button.principal { background: #2463a6; }
+button.principal:hover { background: #184b80; }
+button.perigo { background: #bf3434; }
+button.perigo:hover { background: #942626; }
+#mensagem:empty { display: none; }
+#mensagem { padding: 12px; border-radius: 6px; margin: 0 0 20px; }
+.sucesso { background: #e5f5e9; color: #17672b; }
+.erro { background: #fde8e8; color: #9c2424; }
+
+/* 6. TABELAS E RODAPÉ */
+.tabela-rolagem { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th { background: #eaf0f7; color: #17365d; }
+th, td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+#resultadoPesquisa { margin-top: 20px; overflow-wrap: anywhere; }
+footer { text-align: center; padding: 22px; color: #66758a; font-size: 13px; }
+@media (max-width: 700px) { main { flex-direction: column; } nav { width: 100%; } .conteudo { width: 100%; padding: 20px; } }
