@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Controle de Estoque</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Controle de Estoque</h1>
+    <p>Projeto de Engenharia de Software — Caio, David e João</p>
+  </header>
+
+  <main>
+    <nav aria-label="Menu principal">
+      <button onclick="mostrarSecao('cadastro')">Cadastrar produto</button>
+      <button onclick="mostrarSecao('consulta')">Consultar estoque</button>
+      <button onclick="mostrarSecao('entrada')">Adicionar quantidade</button>
+      <button onclick="mostrarSecao('saida')">Retirar quantidade</button>
+      <button onclick="mostrarSecao('pesquisa')">Pesquisar produto</button>
+      <button onclick="mostrarSecao('exclusao')">Excluir produto</button>
+    </nav>
+
+    <div class="conteudo">
+      <p id="mensagem" role="status" aria-live="polite"></p>
+
+      <!-- CADASTRO E CONSULTA DE PRODUTOS -->
+      <section id="cadastro" class="secao ativa">
+        <h2>Cadastrar produto</h2>
+        <form id="formCadastro">
+          <label for="codigo">Código do produto</label>
+          <input id="codigo" type="text" required>
+          <label for="nome">Nome do produto</label>
+          <input id="nome" type="text" required>
+          <label for="quantidade">Quantidade inicial</label>
+          <input id="quantidade" type="number" min="0" step="1" required>
+          <button type="submit" class="principal">Cadastrar</button>
+        </form>
+      </section>
+
+      <section id="consulta" class="secao">
+        <h2>Estoque atual</h2>
+        <div class="tabela-rolagem">
+          <table>
+            <thead><tr><th>Código</th><th>Produto</th><th>Quantidade</th></tr></thead>
+            <tbody id="tabelaEstoque"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- MOVIMENTAÇÃO: ENTRADA E SAÍDA -->
+      <section id="entrada" class="secao">
+        <h2>Adicionar quantidade</h2>
+        <form id="formEntrada">
+          <label for="codigoEntrada">Código do produto</label>
+          <input id="codigoEntrada" type="text" required>
+          <label for="quantidadeEntrada">Quantidade para adicionar</label>
+          <input id="quantidadeEntrada" type="number" min="1" step="1" required>
+          <button type="submit" class="principal">Adicionar</button>
+        </form>
+      </section>
+
+      <section id="saida" class="secao">
+        <h2>Retirar quantidade</h2>
+        <form id="formSaida">
+          <label for="codigoSaida">Código do produto</label>
+          <input id="codigoSaida" type="text" required>
+          <label for="quantidadeSaida">Quantidade para retirar</label>
+          <input id="quantidadeSaida" type="number" min="1" step="1" required>
+          <button type="submit" class="principal">Retirar</button>
+        </form>
+      </section>
+
+      <!-- PESQUISA E EXCLUSÃO -->
+      <section id="pesquisa" class="secao">
+        <h2>Pesquisar produto</h2>
+        <form id="formPesquisa">
+          <label for="codigoPesquisa">Código do produto</label>
+          <input id="codigoPesquisa" type="text" required>
+          <button type="submit" class="principal">Pesquisar</button>
+        </form>
+        <div id="resultadoPesquisa"></div>
+      </section>
+
+      <section id="exclusao" class="secao">
+        <h2>Excluir produto</h2>
+        <form id="formExclusao">
+          <label for="codigoExclusao">Código do produto</label>
+          <input id="codigoExclusao" type="text" required>
+          <button type="submit" class="perigo">Excluir</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>Projeto acadêmico • Caio, David e João</footer>
+
+  <!-- LÓGICA DO SISTEMA: JAVASCRIPT -->
+  <script>
+    // JAVASCRIPT: funções do sistema (mantido no HTML para usar apenas 2 arquivos)
+    let estoque = JSON.parse(localStorage.getItem('estoque')) || [];
+
+    function salvarEstoque() {
+      localStorage.setItem('estoque', JSON.stringify(estoque));
+    }
+
+    function buscarProduto(codigo) {
+      return estoque.find(produto => produto.codigo === codigo);
+    }
+
+    function mostrarMensagem(texto, erro = false) {
+      const mensagem = document.getElementById('mensagem');
+      mensagem.textContent = texto;
+      mensagem.className = erro ? 'erro' : 'sucesso';
+    }
+
+    document.getElementById('formCadastro').addEventListener('submit', function(evento) {
+      evento.preventDefault();
+      const codigo = document.getElementById('codigo').value.trim();
+      const nome = document.getElementById('nome').value.trim();
+      const quantidade = Number(document.getElementById('quantidade').value);
+
+      if (!codigo || !nome || !Number.isSafeInteger(quantidade) || quantidade < 0) {
+        mostrarMensagem('Preencha os campos corretamente.', true);
+        return;
+      }
+      if (buscarProduto(codigo)) {
+        mostrarMensagem('Já existe um produto com esse código!', true);
+        return;
+      }
+      estoque.push({ codigo, nome, quantidade });
+      salvarEstoque();
+      this.reset();
+      mostrarMensagem('Produto cadastrado com sucesso!');
+    });
+
+    function consultarEstoque() {
+      const tabela = document.getElementById('tabelaEstoque');
+      tabela.replaceChildren();
+      if (estoque.length === 0) {
+        const linha = tabela.insertRow();
+        const celula = linha.insertCell();
+        celula.colSpan = 3;
+        celula.textContent = 'Nenhum produto cadastrado.';
+        return;
+      }
+      estoque.forEach(produto => {
+        const linha = tabela.insertRow();
+        [produto.codigo, produto.nome, produto.quantidade].forEach(valor => {
+          linha.insertCell().textContent = valor;
+        });
+      });
+    }
+
+    // PARTE 2 - DAVID: entrada e saída de produtos
+    document.getElementById('formEntrada').addEventListener('submit', function(evento) {
+      evento.preventDefault();
+      const codigo = document.getElementById('codigoEntrada').value.trim();
+      const quantidade = Number(document.getElementById('quantidadeEntrada').value);
+      const produto = buscarProduto(codigo);
+      if (!produto) return mostrarMensagem('Produto não encontrado.', true);
+      if (!Number.isSafeInteger(quantidade) || quantidade <= 0 || !Number.isSafeInteger(produto.quantidade + quantidade)) {
+        return mostrarMensagem('Digite uma quantidade válida.', true);
+      }
+      produto.quantidade += quantidade;
+      salvarEstoque();
+      this.reset();
+      mostrarMensagem('Estoque atualizado! Quantidade atual: ' + produto.quantidade);
+    });
+
+    document.getElementById('formSaida').addEventListener('submit', function(evento) {
+      evento.preventDefault();
+      const codigo = document.getElementById('codigoSaida').value.trim();
+      const quantidade = Number(document.getElementById('quantidadeSaida').value);
+      const produto = buscarProduto(codigo);
+      if (!produto) return mostrarMensagem('Produto não encontrado.', true);
+      if (!Number.isSafeInteger(quantidade) || quantidade <= 0) {
+        return mostrarMensagem('Digite uma quantidade válida.', true);
+      }
+      if (quantidade > produto.quantidade) {
+        return mostrarMensagem('Estoque insuficiente! Disponível: ' + produto.quantidade, true);
+      }
+      produto.quantidade -= quantidade;
+      salvarEstoque();
+      this.reset();
+      mostrarMensagem('Retirada realizada! Quantidade restante: ' + produto.quantidade);
+    });
+
+    // PARTE 3 - JOÃO: pesquisa, exclusão e menu
+    document.getElementById('formPesquisa').addEventListener('submit', function(evento) {
+      evento.preventDefault();
+      const codigo = document.getElementById('codigoPesquisa').value.trim();
+      const produto = buscarProduto(codigo);
+      const resultado = document.getElementById('resultadoPesquisa');
+      resultado.replaceChildren();
+      if (!produto) return mostrarMensagem('Produto não encontrado.', true);
+      const paragrafo = document.createElement('p');
+      paragrafo.textContent = `Código: ${produto.codigo} | Nome: ${produto.nome} | Quantidade: ${produto.quantidade}`;
+      resultado.appendChild(paragrafo);
+      document.getElementById('mensagem').textContent = '';
+    });
+
+    document.getElementById('formExclusao').addEventListener('submit', function(evento) {
+      evento.preventDefault();
+      const codigo = document.getElementById('codigoExclusao').value.trim();
+      const produto = buscarProduto(codigo);
+      if (!produto) return mostrarMensagem('Produto não encontrado.', true);
+      if (!confirm('Confirma a exclusão do produto ' + produto.nome + '?')) {
+        return mostrarMensagem('Exclusão cancelada.');
+      }
+      estoque = estoque.filter(item => item.codigo !== codigo);
+      salvarEstoque();
+      this.reset();
+      mostrarMensagem('Produto excluído com sucesso!');
+    });
+
+    function mostrarSecao(id) {
+      document.querySelectorAll('.secao').forEach(secao => secao.classList.remove('ativa'));
+      document.getElementById(id).classList.add('ativa');
+      document.getElementById('mensagem').textContent = '';
+      document.getElementById('resultadoPesquisa').replaceChildren();
+      if (id === 'consulta') consultarEstoque();
+    }
+  </script>
+</body>
+</html>
